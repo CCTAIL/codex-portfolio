@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Codex × Ads Measurement: A Day-1 Product Opportunity</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;500;700&family=IBM+Plex+Mono:wght@400;500;600&family=Lora:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #0f1117;
+      --muted: #6b7280;
+      --line: #4f46e5;
+      --soft-line: rgba(79, 70, 229, 0.2);
+      --soft-fill: rgba(79, 70, 229, 0.04);
+      --code-bg: #12162a;
+      --code-text: #edf1ff;
+      --shadow: 0 24px 60px rgba(15, 17, 23, 0.08);
+      --max-width: 780px;
+      --body-size: 15px;
+      --body-leading: 1.8;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      background: var(--bg);
+    }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      background: var(--bg);
+      font-family: "Lora", Georgia, serif;
+      font-size: var(--body-size);
+      line-height: var(--body-leading);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    .top-bar,
+    .bottom-bar {
+      width: 100%;
+      background: var(--line);
+    }
+
+    .top-bar {
+      height: 6px;
+    }
+
+    .bottom-bar {
+      height: 3px;
+      margin-top: 32px;
+    }
+
+    .page {
+      position: relative;
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 42px 40px 28px;
+    }
+
+    .print-button {
+      position: absolute;
+      top: 26px;
+      right: 40px;
+      border: 1px solid var(--line);
+      background: var(--line);
+      color: #ffffff;
+      font-family: "DM Sans", Arial, sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      padding: 10px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+    }
+
+    .print-button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 40px rgba(79, 70, 229, 0.18);
+    }
+
+    .kicker {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 30px;
+      padding-right: 120px;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    header {
+      margin-bottom: 28px;
+      page-break-inside: avoid;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-family: "DM Sans", Arial, sans-serif;
+      font-size: 36px;
+      line-height: 1.1;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      max-width: 630px;
+    }
+
+    .subtitle {
+      margin: 0 0 18px;
+      font-style: italic;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      padding-top: 12px;
+      border-top: 1px solid var(--soft-line);
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .identity-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-top: 12px;
+    }
+
+    .identity-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--soft-fill);
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--line);
+      text-transform: uppercase;
+    }
+
+    .identity-note {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .meta-row span + span::before {
+      content: "·";
+      margin-right: 10px;
+      color: var(--line);
+    }
+
+    section {
+      padding: 22px 0 24px;
+      border-top: 1px solid var(--line);
+      page-break-inside: avoid;
+    }
+
+    .section-label {
+      margin-bottom: 10px;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      color: var(--line);
+      text-transform: uppercase;
+    }
+
+    h2 {
+      margin: 0 0 14px;
+      font-family: "DM Sans", Arial, sans-serif;
+      font-size: 28px;
+      line-height: 1.2;
+      font-weight: 500;
+      letter-spacing: -0.025em;
+      color: var(--text);
+    }
+
+    h3 {
+      margin: 20px 0 8px;
+      font-family: "DM Sans", Arial, sans-serif;
+      font-size: 17px;
+      line-height: 1.35;
+      font-weight: 500;
+      color: var(--line);
+    }
+
+    p {
+      margin: 0 0 14px;
+    }
+
+    .pull-quote {
+      margin: 20px 0;
+      padding: 10px 0 10px 18px;
+      border-left: 3px solid var(--line);
+      font-style: italic;
+      font-size: 20px;
+      line-height: 1.55;
+      color: #1c2240;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .stat-box,
+    .card,
+    .credential-pill,
+    .comparison-table td,
+    .comparison-table th {
+      border: 1px solid var(--soft-line);
+    }
+
+    .stat-box {
+      padding: 14px 14px 12px;
+      background: linear-gradient(180deg, rgba(79, 70, 229, 0.04) 0%, rgba(79, 70, 229, 0.01) 100%);
+      box-shadow: var(--shadow);
+    }
+
+    .stat-value {
+      display: block;
+      margin-bottom: 6px;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--line);
+      line-height: 1.2;
+    }
+
+    .stat-label {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      line-height: 1.6;
+      letter-spacing: 0.02em;
+      color: var(--muted);
+      text-transform: none;
+    }
+
+    .comparison-table {
+      width: 100%;
+      margin-top: 18px;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 14px;
+    }
+
+    .comparison-table th {
+      padding: 12px 14px;
+      background: var(--soft-fill);
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--line);
+      text-align: left;
+      text-transform: uppercase;
+    }
+
+    .comparison-table td {
+      padding: 13px 14px;
+      vertical-align: top;
+    }
+
+    .code-block {
+      margin: 18px 0 20px;
+      padding: 16px 18px;
+      border-left: 4px solid var(--line);
+      background: var(--code-bg);
+      color: var(--code-text);
+      box-shadow: var(--shadow);
+      page-break-inside: avoid;
+    }
+
+    .code-block pre {
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .card {
+      padding: 16px 16px 14px;
+      background: #ffffff;
+      box-shadow: var(--shadow);
+    }
+
+    .card h4 {
+      margin: 0 0 8px;
+      font-family: "DM Sans", Arial, sans-serif;
+      font-size: 18px;
+      line-height: 1.3;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .card p {
+      margin: 0;
+    }
+
+    .credentials {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .credential-pill {
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      color: var(--line);
+      background: var(--soft-fill);
+      text-transform: uppercase;
+    }
+
+    ol {
+      margin: 12px 0 0 22px;
+      padding: 0;
+    }
+
+    ol li {
+      margin-bottom: 10px;
+      padding-left: 4px;
+    }
+
+    footer {
+      padding: 16px 0 0;
+      text-align: center;
+      page-break-inside: avoid;
+    }
+
+    .footer-contact,
+    .footer-note {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+
+    @media (max-width: 860px) {
+      .page {
+        padding: 38px 24px 24px;
+      }
+
+      .print-button {
+        right: 24px;
+      }
+
+      .kicker {
+        padding-right: 104px;
+      }
+    }
+
+    @media (max-width: 720px) {
+      h1 {
+        font-size: 31px;
+      }
+
+      .kicker {
+        justify-content: flex-start;
+        padding-right: 0;
+        margin-bottom: 20px;
+      }
+
+      .print-button {
+        position: static;
+        margin-bottom: 20px;
+      }
+
+      .stats-row,
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+
+      .comparison-table {
+        font-size: 13px;
+      }
+    }
+
+    @media print {
+      :root {
+        --body-size: 13px;
+      }
+
+      @page {
+        size: auto;
+        margin: 0.55in;
+      }
+
+      body {
+        background: #ffffff;
+      }
+
+      .page {
+        max-width: none;
+        padding: 24px 0 16px;
+      }
+
+      .print-button {
+        display: none !important;
+      }
+
+      .stat-box,
+      .card,
+      .credential-pill,
+      .comparison-table th,
+      .comparison-table td,
+      .code-block {
+        box-shadow: none !important;
+        background: transparent !important;
+      }
+
+      section,
+      h2,
+      h3,
+      .pull-quote,
+      .stats-row,
+      .two-col,
+      .comparison-table,
+      .code-block,
+      footer {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="top-bar"></div>
+  <main class="page">
+    <button class="print-button" type="button" onclick="window.print()">Save as PDF</button>
+
+    <div class="kicker">NING AI · META IC6 · MARCH 2026</div>
+
+    <header>
+      <h1>Codex × Ads Measurement: A Day-1 Product Opportunity</h1>
+      <p class="subtitle">How Codex can collapse the translation tax for performance marketing data scientists</p>
+      <div class="meta-row">
+        <span>STATUS: DRAFT</span>
+        <span>AUDIENCE: OPENAI DS HIRING</span>
+        <span>READ TIME: ~4 MIN</span>
+      </div>
+      <div class="identity-row">
+        <div class="identity-badge">DRAFT · FOR OPENAI HIRING REVIEW</div>
+        <div class="identity-note">Author: Ning Ai · Date: March 2026</div>
+      </div>
+    </header>
+
+    <section>
+      <div class="section-label">01 · THE PROBLEM</div>
+      <h2>Ads measurement DS teams have a translation tax. Codex can eliminate it.</h2>
+      <p>Every performance marketing data scientist I know spends 30–40% of their time on a task that has nothing to do with statistics: translating analytical intent into working code. They know exactly what they want — a geo holdout design, a CUPED-adjusted experiment, an incrementality regression — but the path from “I need this measurement” to “this code runs correctly” is slow, error-prone, and deeply frustrating.</p>
+      <p>At Meta, I lived this problem for four years. I built incrementality measurement frameworks, Bayesian MMM systems, and causal inference pipelines serving 10M+ advertisers. The bottleneck was never the math. It was the translation tax.</p>
+
+      <div class="pull-quote">“The bottleneck was never the math. It was the translation tax: specification → working code → validated output.”</div>
+
+      <div class="stats-row">
+        <div class="stat-box">
+          <span class="stat-value">30–40%</span>
+          <div class="stat-label">of DS time lost to code translation (internal estimate)</div>
+        </div>
+        <div class="stat-box">
+          <span class="stat-value">10M+</span>
+          <div class="stat-label">advertisers affected by measurement quality at Meta</div>
+        </div>
+        <div class="stat-box">
+          <span class="stat-value">$300M+</span>
+          <div class="stat-label">in revenue impact from measurement systems I personally shipped</div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-label">02 · THE OPPORTUNITY</div>
+      <h2>Codex already solves this. It just doesn't know ads measurement yet.</h2>
+      <p>Codex is uniquely positioned to eliminate the translation tax for DS teams in performance marketing. The primitives are all there: code generation, iteration, debugging, explanation. What's missing is domain depth — the ability to understand that when a DS says “I need an incrementality test,” they mean a specific causal design with a pre-period, a treatment/control split, a CUPED adjustment, and a regression framework that handles autocorrelation.</p>
+      <p>This is a solvable problem. It requires the right evaluation dataset, the right fine-tuning signal, and a DS who has actually shipped these systems in production.</p>
+
+      <table class="comparison-table" aria-label="Comparison of generic Codex and domain-aware Codex">
+        <thead>
+          <tr>
+            <th>Without Domain-Aware Codex</th>
+            <th>With Domain-Aware Codex</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Generic pandas code</td>
+            <td>Causal-design-aware Python with correct variance estimators</td>
+          </tr>
+          <tr>
+            <td>User must specify every parameter</td>
+            <td>Codex infers measurement intent and asks the right clarifying questions</td>
+          </tr>
+          <tr>
+            <td>No awareness of experimental validity</td>
+            <td>Flags SUTVA violations, novelty effects, and underpowered designs automatically</td>
+          </tr>
+          <tr>
+            <td>Output requires expert review</td>
+            <td>Output is audit-ready with inline assumptions documented</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <div class="section-label">03 · PROPOSED FOCUS AREA</div>
+      <h2>Priority 1: Incrementality Measurement Code Generation</h2>
+
+      <h3>Why this, why now</h3>
+      <p>Incrementality measurement is the highest-value, highest-complexity task in ads DS. It's also the task most likely to be done wrong without expert guidance — wrong variance estimators, ignored pre-trends, misconfigured holdouts. A Codex that can reliably generate correct incrementality measurement code would be a step-change improvement for thousands of DS teams.</p>
+
+      <h3>What “good” looks like — a concrete success metric</h3>
+      <p>I would define success as: given a natural language description of a measurement goal (e.g. “I want to measure the incremental ROAS of my Meta campaign using a geo holdout over 4 weeks”), Codex generates Python code that: (1) chooses the correct experimental design (geo holdout vs. ghost ads vs. PSM), (2) implements the correct regression specification with clustered standard errors, (3) includes a pre-period parallel trends validation, (4) outputs a clean summary table with lift estimate, confidence interval, and p-value.</p>
+
+      <div class="code-block">
+        <pre><code># Target Codex output: Geo Holdout Incrementality
+import pandas as pd, numpy as np
+from statsmodels.formula.api import ols
+
+def run_geo_holdout(df, pre_col, post_col, treat_col):
+    # Validate parallel trends in pre-period
+    pre_check = df.groupby(treat_col)[pre_col].mean()
+    print(f"Pre-period means: {pre_check.to_dict()}")
+
+    # DiD regression with clustered SE
+    df['did'] = df[treat_col] * df['post']
+    model = ols('revenue ~ did + C(geo) + C(week)', data=df).fit(
+        cov_type='cluster', cov_kwds={'groups': df['geo']}
+    )
+    return model.summary()</code></pre>
+      </div>
+
+      <h3>How I would build the evaluation dataset</h3>
+      <p>The core challenge is creating a ground-truth evaluation set for measurement code. My approach: (1) collect 200 real measurement task descriptions from anonymized DS forum posts and internal tickets, (2) have 3 expert reviewers write gold-standard code for each, (3) score Codex outputs on 5 dimensions: design choice correctness, statistical validity, runnability, edge case handling, and assumption transparency. This mirrors the LM-as-a-judge framework I built for Meta AI Search — adapted for code evaluation.</p>
+    </section>
+
+    <section>
+      <div class="section-label">04 · WHY ME</div>
+      <h2>I've shipped both sides of this problem.</h2>
+
+      <div class="two-col">
+        <article class="card">
+          <h4>The Measurement Side</h4>
+          <p>4 years building incrementality frameworks, Bayesian MMM, geo holdouts, and CUPED experiments at Meta. $300M+ in attributed revenue impact. I know exactly what correct measurement code looks like — and what “good enough” code that produces wrong answers looks like.</p>
+        </article>
+        <article class="card">
+          <h4>The Evaluation Side</h4>
+          <p>Architected Meta AI Search's 0→1 offline eval system: LM-as-a-judge pipelines, human-LM alignment validation, 6-pillar quality framework, heel-climb and fear-mode analyses. I know how to measure whether a model's output is actually correct — not just fluent.</p>
+        </article>
+      </div>
+
+      <div class="pull-quote">“Most DS candidates understand measurement or evaluation. I've shipped production systems on both sides — and the intersection is exactly where Codex's next capability jump lives.”</div>
+
+      <div class="credentials">
+        <span class="credential-pill">Meta IC6</span>
+        <span class="credential-pill">Cornell M.S. Stats</span>
+        <span class="credential-pill">3× Exceeds Expectations</span>
+        <span class="credential-pill">10 yrs DS</span>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-label">05 · OPEN QUESTIONS FOR THE TEAM</div>
+      <h2>What I'd want to discuss on Day 1</h2>
+      <ol>
+        <li>How is Codex currently evaluated on domain-specific DS tasks vs. general programming tasks? Is there a vertical-specific eval framework?</li>
+        <li>What's the current signal source for fine-tuning — is there a mechanism to incorporate expert DS annotations at the task level?</li>
+        <li>How does the team think about the tradeoff between generality (Codex works for all code) and depth (Codex is expert-level for specific DS domains)?</li>
+        <li>Is there an existing benchmark for measurement/causal inference code generation, or would this be greenfield?</li>
+      </ol>
+    </section>
+
+    <div class="bottom-bar"></div>
+
+    <footer>
+      <div class="footer-contact">Ning Ai · cctail435@gmail.com · 607-262-1704 · linkedin.com/in/ning-ai</div>
+      <div class="footer-note">Prepared for OpenAI DS Hiring · March 2026 · All figures based on Meta internal measurement work</div>
+    </footer>
+  </main>
+</body>
+</html>

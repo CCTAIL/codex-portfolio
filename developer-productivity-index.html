@@ -1,0 +1,1860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Developer Productivity Index - Ning Ai</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300&family=IBM+Plex+Mono:wght@400;600&family=Outfit:wght@300;500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #05060f;
+      --surface: #0c0e1b;
+      --surface-2: #111428;
+      --border: #181a2e;
+      --blue: #3b82f6;
+      --teal: #06b6d4;
+      --green: #10b981;
+      --amber: #f59e0b;
+      --red: #f43f5e;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+      --radius: 10px;
+      --transition: 0.2s ease;
+      --content-width: 1100px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at top right, rgba(59, 130, 246, 0.12), transparent 28%),
+        radial-gradient(circle at top left, rgba(6, 182, 212, 0.1), transparent 30%),
+        var(--bg);
+      color: var(--text);
+      font-family: "Outfit", sans-serif;
+      line-height: 1.45;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+      background-size: 32px 32px;
+      mask-image: radial-gradient(circle at center, black 35%, transparent 100%);
+      opacity: 0.35;
+    }
+
+    .top-bar {
+      height: 4px;
+      background: linear-gradient(90deg, #4338ca, #3b82f6, #06b6d4);
+      position: sticky;
+      top: 0;
+      z-index: 30;
+    }
+
+    .page {
+      max-width: var(--content-width);
+      margin: 0 auto;
+      padding: 0 18px 32px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header {
+      position: sticky;
+      top: 4px;
+      z-index: 20;
+      backdrop-filter: blur(16px);
+      background: rgba(5, 6, 15, 0.72);
+      border-bottom: 1px solid rgba(24, 26, 46, 0.9);
+    }
+
+    .header-inner {
+      max-width: var(--content-width);
+      margin: 0 auto;
+      padding: 16px 18px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) auto minmax(0, 1fr);
+      gap: 16px;
+      align-items: center;
+    }
+
+    .header-title {
+      font-size: 1.32rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+
+    .header-badge,
+    .header-meta {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.76rem;
+      color: var(--muted);
+    }
+
+    .header-badge {
+      justify-self: center;
+      border: 1px solid rgba(59, 130, 246, 0.26);
+      background: rgba(59, 130, 246, 0.08);
+      padding: 7px 10px;
+      border-radius: 999px;
+      white-space: nowrap;
+      color: #bfd7ff;
+    }
+
+    .header-right {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .header-meta {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .print-button {
+      border: 1px solid rgba(6, 182, 212, 0.3);
+      background: linear-gradient(180deg, rgba(12, 14, 27, 0.95), rgba(17, 20, 40, 0.95));
+      color: var(--text);
+      border-radius: 999px;
+      padding: 9px 14px;
+      font: 500 0.82rem "Outfit", sans-serif;
+      cursor: pointer;
+      transition: transform var(--transition), border-color var(--transition), background var(--transition);
+    }
+
+    .print-button:hover {
+      transform: translateY(-1px);
+      border-color: rgba(6, 182, 212, 0.55);
+      background: rgba(6, 182, 212, 0.12);
+    }
+
+    main {
+      padding-top: 24px;
+    }
+
+    .section {
+      margin-bottom: 32px;
+    }
+
+    .candidate-banner {
+      margin: 22px 0 0;
+      padding: 0;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .candidate-banner::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 3px;
+      background: linear-gradient(180deg, var(--blue), var(--teal));
+    }
+
+    .candidate-banner-inner {
+      display: grid;
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+      gap: 24px;
+      padding: 20px 22px;
+      align-items: center;
+    }
+
+    .banner-eyebrow {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      color: var(--teal);
+      letter-spacing: 0.1em;
+      margin-bottom: 10px;
+    }
+
+    .banner-name {
+      font-size: 22px;
+      font-weight: 700;
+      margin: 0 0 6px;
+    }
+
+    .banner-subtitle {
+      color: #cbd5e1;
+      margin: 0;
+      font-size: 0.95rem;
+    }
+
+    .banner-copy {
+      font-family: "DM Sans", sans-serif;
+      font-weight: 300;
+      font-size: 14px;
+      color: var(--muted);
+      margin: 0 0 14px;
+      line-height: 1.6;
+    }
+
+    .banner-links,
+    .cta-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: end;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      margin: 0;
+    }
+
+    .section-subtitle {
+      margin: 3px 0 0;
+      font-size: 0.77rem;
+      color: var(--muted);
+      font-family: "IBM Plex Mono", monospace;
+    }
+
+    .grid-hero {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    .card {
+      background: linear-gradient(180deg, rgba(12, 14, 27, 0.96), rgba(10, 12, 24, 0.98));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px;
+      min-width: 0;
+    }
+
+    .hero-card {
+      padding: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      inset: auto -16% -60% auto;
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.18), transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-model {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .model-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+    }
+
+    .model-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .dot-v1 { background: var(--blue); }
+    .dot-v2 { background: var(--teal); }
+
+    .hero-label {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.73rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .hero-score {
+      font-size: 3rem;
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -0.03em;
+      margin: 10px 0 12px;
+      transition: color var(--transition), transform var(--transition), text-shadow var(--transition);
+      text-shadow: 0 0 18px rgba(59, 130, 246, 0.08);
+    }
+
+    .hero-score-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 10px 0 4px;
+    }
+
+    .info-button {
+      border: 1px solid rgba(100, 116, 139, 0.3);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--muted);
+      border-radius: 999px;
+      width: 22px;
+      height: 22px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.72rem;
+      cursor: pointer;
+      transition: border-color var(--transition), color var(--transition), background var(--transition);
+    }
+
+    .info-button:hover {
+      border-color: rgba(59, 130, 246, 0.45);
+      color: var(--text);
+      background: rgba(59, 130, 246, 0.08);
+    }
+
+    .hero-card:hover .hero-score {
+      transform: translateY(-1px);
+    }
+
+    .metric-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .pill {
+      border: 1px solid rgba(100, 116, 139, 0.22);
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 0.76rem;
+      color: #cbd5e1;
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      white-space: nowrap;
+    }
+
+    .pill strong {
+      font-family: "IBM Plex Mono", monospace;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .delta-stack {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 140px;
+    }
+
+    .delta-badge {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 12px 14px;
+      border-radius: var(--radius);
+      background: rgba(16, 185, 129, 0.09);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      min-height: 100%;
+      text-align: center;
+    }
+
+    .delta-badge.negative {
+      background: rgba(244, 63, 94, 0.08);
+      border-color: rgba(244, 63, 94, 0.26);
+    }
+
+    .delta-arrow {
+      font-size: 1.2rem;
+    }
+
+    .delta-text {
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .delta-sub {
+      font-size: 0.76rem;
+      color: var(--muted);
+      font-family: "IBM Plex Mono", monospace;
+    }
+
+    details.card {
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .weight-summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 16px 18px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .weight-summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .weight-summary::after {
+      content: "▾";
+      font-size: 1rem;
+      color: var(--muted);
+      transition: transform var(--transition);
+    }
+
+    details[open] .weight-summary::after {
+      transform: rotate(180deg);
+    }
+
+    .weight-panel {
+      padding: 0 18px 18px;
+      border-top: 1px solid rgba(24, 26, 46, 0.9);
+    }
+
+    .control-row {
+      display: grid;
+      grid-template-columns: minmax(150px, 220px) 1fr 68px;
+      gap: 14px;
+      align-items: center;
+      padding: 11px 0;
+    }
+
+    .control-label {
+      font-size: 0.92rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .control-value {
+      justify-self: end;
+      font-family: "IBM Plex Mono", monospace;
+      font-weight: 600;
+    }
+
+    input[type="range"] {
+      appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(59, 130, 246, 0.4), rgba(6, 182, 212, 0.55));
+      outline: none;
+      cursor: pointer;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #dbeafe;
+      border: 2px solid var(--blue);
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #dbeafe;
+      border: 2px solid var(--blue);
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
+    }
+
+    .weight-footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
+    .stacked-bar {
+      display: flex;
+      overflow: hidden;
+      width: 100%;
+      min-height: 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .stacked-bar span {
+      display: block;
+      height: 12px;
+      transition: width var(--transition);
+    }
+
+    .secondary-button {
+      border: 1px solid rgba(100, 116, 139, 0.26);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 9px 13px;
+      cursor: pointer;
+      font: 500 0.82rem "Outfit", sans-serif;
+      transition: border-color var(--transition), background var(--transition), transform var(--transition);
+      white-space: nowrap;
+    }
+
+    .secondary-button:hover {
+      transform: translateY(-1px);
+      border-color: rgba(100, 116, 139, 0.55);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .tab-switcher {
+      display: inline-flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .tab-button {
+      border: 1px solid rgba(100, 116, 139, 0.26);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font: 500 0.8rem "Outfit", sans-serif;
+      transition: all var(--transition);
+    }
+
+    .tab-button.active {
+      background: var(--blue);
+      color: #ffffff;
+      border-color: rgba(59, 130, 246, 0.85);
+    }
+
+    .chart-card svg,
+    .bar-card svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .chart-wrap {
+      position: relative;
+      min-height: 365px;
+    }
+
+    .svg-label {
+      font-family: "IBM Plex Mono", monospace;
+      fill: var(--muted);
+      font-size: 11px;
+    }
+
+    .svg-value {
+      font-family: "IBM Plex Mono", monospace;
+      fill: var(--text);
+      font-size: 11px;
+    }
+
+    .metric-row-scroll {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: thin;
+    }
+
+    .mini-card {
+      flex: 0 0 min(220px, 74vw);
+      padding: 14px;
+    }
+
+    .mini-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .mini-title {
+      margin: 0;
+      font-size: 0.86rem;
+      font-weight: 600;
+    }
+
+    .mini-values {
+      font-size: 0.76rem;
+      color: var(--muted);
+      font-family: "IBM Plex Mono", monospace;
+      line-height: 1.4;
+      text-align: right;
+    }
+
+    .delta-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      padding: 4px 9px;
+      font-size: 0.72rem;
+      font-family: "IBM Plex Mono", monospace;
+      border: 1px solid transparent;
+      margin-top: 8px;
+    }
+
+    .delta-chip.positive {
+      color: #bbf7d0;
+      border-color: rgba(16, 185, 129, 0.22);
+      background: rgba(16, 185, 129, 0.09);
+    }
+
+    .delta-chip.negative {
+      color: #fecdd3;
+      border-color: rgba(244, 63, 94, 0.22);
+      background: rgba(244, 63, 94, 0.09);
+    }
+
+    .heatmap-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 8px;
+      margin-top: 6px;
+    }
+
+    .heatmap-table th {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-weight: 600;
+      text-align: left;
+      padding-bottom: 4px;
+    }
+
+    .heatmap-table td {
+      border-radius: 10px;
+      padding: 11px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.83rem;
+      position: relative;
+      transition: transform var(--transition), border-color var(--transition);
+    }
+
+    .heatmap-table td.data-cell:hover {
+      transform: translateY(-1px);
+      border-color: rgba(255, 255, 255, 0.16);
+    }
+
+    .heatmap-table .row-head {
+      background: rgba(255, 255, 255, 0.02);
+      color: var(--text);
+      font-family: "Outfit", sans-serif;
+      font-size: 0.92rem;
+    }
+
+    .heatmap-insight {
+      margin-top: 10px;
+      color: var(--muted);
+      font-style: italic;
+      font-size: 0.9rem;
+    }
+
+    .legend {
+      display: flex;
+      gap: 14px;
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-family: "IBM Plex Mono", monospace;
+      align-items: center;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .legend-swatch {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      display: inline-block;
+    }
+
+    .insights {
+      display: grid;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .insight {
+      border-left: 3px solid rgba(59, 130, 246, 0.9);
+      padding: 10px 12px;
+      background: rgba(59, 130, 246, 0.05);
+      border-radius: 0 10px 10px 0;
+      font-size: 0.95rem;
+    }
+
+    .insight.recommendation {
+      border-left-color: rgba(245, 158, 11, 0.95);
+      background: rgba(245, 158, 11, 0.08);
+    }
+
+    .insight strong {
+      color: #bfdbfe;
+      margin-right: 8px;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.83rem;
+    }
+
+    footer.card {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      font-size: 0.82rem;
+      color: var(--muted);
+      font-family: "IBM Plex Mono", monospace;
+    }
+
+    .footer-note {
+      flex: 1 1 480px;
+    }
+
+    .tooltip {
+      position: fixed;
+      pointer-events: none;
+      z-index: 40;
+      opacity: 0;
+      transform: translate(-50%, -115%);
+      transition: opacity 0.12s ease;
+      min-width: 160px;
+      background: rgba(10, 12, 24, 0.96);
+      border: 1px solid rgba(59, 130, 246, 0.22);
+      box-shadow: var(--shadow);
+      border-radius: 10px;
+      padding: 10px 11px;
+      font-size: 0.76rem;
+      color: var(--text);
+    }
+
+    .tooltip.visible {
+      opacity: 1;
+    }
+
+    .tooltip-title {
+      font-family: "IBM Plex Mono", monospace;
+      color: #bfdbfe;
+      margin-bottom: 6px;
+      font-size: 0.73rem;
+    }
+
+    .tooltip-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 4px;
+      font-family: "IBM Plex Mono", monospace;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .screen-only {
+      display: inline-flex;
+    }
+
+    @media (max-width: 920px) {
+      .header-inner {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .header-badge,
+      .header-right {
+        justify-self: center;
+      }
+
+      .grid-hero {
+        grid-template-columns: 1fr;
+      }
+
+      .candidate-banner-inner {
+        grid-template-columns: 1fr;
+      }
+
+      .delta-stack {
+        min-width: 0;
+      }
+
+      .delta-badge {
+        flex-direction: row;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .control-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .control-value {
+        justify-self: start;
+      }
+
+      .section-head {
+        flex-direction: column;
+        align-items: start;
+      }
+
+      footer.card {
+        flex-direction: column;
+      }
+    }
+
+    @media print {
+      :root {
+        --bg: #ffffff;
+        --surface: #ffffff;
+        --surface-2: #ffffff;
+        --border: #d6d9e2;
+        --text: #111827;
+        --muted: #475569;
+        --shadow: none;
+      }
+
+      body {
+        background: #ffffff;
+        color: #111827;
+      }
+
+      body::before,
+      .top-bar,
+      .screen-only,
+      #weights-panel {
+        display: none !important;
+      }
+
+      .header {
+        position: static;
+        backdrop-filter: none;
+        background: #ffffff;
+        border-bottom: 1px solid #d6d9e2;
+      }
+
+      .page {
+        max-width: none;
+        padding: 0 12mm 12mm;
+      }
+
+      main {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        align-items: start;
+      }
+
+      .section.full-width,
+      .section.footer-section {
+        grid-column: 1 / -1;
+      }
+
+      .card,
+      details.card {
+        break-inside: avoid;
+        background: #ffffff;
+        border-color: #d6d9e2;
+        box-shadow: none;
+      }
+
+      .hero-score,
+      .svg-value {
+        color: #111827;
+        fill: #111827;
+      }
+
+      .svg-label {
+        fill: #475569;
+      }
+
+      .heatmap-table td,
+      .heatmap-table .row-head {
+        border-color: rgba(15, 23, 42, 0.12);
+      }
+
+      footer .cta-buttons {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="top-bar"></div>
+  <header class="header">
+    <div class="header-inner">
+      <div class="header-title">⚡ Developer Productivity Index</div>
+      <div class="header-badge">Codex v1 vs v2 · 90-day analysis</div>
+      <div class="header-right">
+        <div class="header-meta">by Ning Ai · OpenAI DS Candidate</div>
+        <button class="print-button screen-only" id="print-button" type="button">Save as PDF</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="page">
+    <section class="card candidate-banner">
+      <div class="candidate-banner-inner">
+        <div>
+          <div class="banner-eyebrow">PORTFOLIO DEMO · OPENAI DS CODEX CANDIDATE</div>
+          <h1 class="banner-name">Ning Ai</h1>
+          <p class="banner-subtitle">Staff Data Scientist · Meta · Causal ML &amp; GenAI Evaluation</p>
+        </div>
+        <div>
+          <p class="banner-copy">This dashboard operationalizes what "developer productivity" means for Codex — a question central to the DS role. I designed a weighted composite index across 5 measurable dimensions (suggestion acceptance, edit trust, test pass rate, task completion, speed), generated realistic 90-day synthetic data reflecting known behavioral patterns (novelty effects, model rollout dynamics), and built the entire visualization in pure JS/SVG. This is exactly the kind of 0→1 metric work I'd own on Day 1.</p>
+          <div class="banner-links">
+            <a class="print-button" href="mailto:cctail435@gmail.com">📧 cctail435@gmail.com</a>
+            <a class="print-button" href="https://www.linkedin.com/in/ning-ai-62249a109/" target="_blank" rel="noreferrer">🔗 LinkedIn</a>
+          </div>
+        </div>
+      </div>
+    </section>
+    <main>
+      <section class="section full-width">
+        <div class="grid-hero">
+          <article class="card hero-card" id="hero-v1"></article>
+          <div class="delta-stack">
+            <div class="delta-badge" id="hero-delta"></div>
+          </div>
+          <article class="card hero-card" id="hero-v2"></article>
+        </div>
+      </section>
+
+      <section class="section full-width">
+        <details class="card" open id="weights-panel">
+          <summary class="weight-summary">
+            <div>
+              <h2 class="section-title">Score Weight Configuration</h2>
+              <p class="section-subtitle">Adjust the relative importance of each productivity dimension</p>
+            </div>
+          </summary>
+          <div class="weight-panel">
+            <div id="weight-controls"></div>
+            <div class="weight-footer">
+              <div style="flex:1 1 480px">
+                <div class="stacked-bar" id="weight-distribution"></div>
+              </div>
+              <button class="secondary-button screen-only" id="reset-button" type="button">Reset Weights</button>
+            </div>
+          </div>
+        </details>
+      </section>
+
+      <section class="section full-width">
+        <article class="card chart-card">
+          <div class="section-head">
+            <div>
+              <h2 class="section-title">Productivity Score Over Time — Codex v1 vs v2</h2>
+              <p class="section-subtitle">90-day daily scores · shaded rolling 7-day min/max band</p>
+            </div>
+          </div>
+          <div class="chart-wrap" id="time-series-chart"></div>
+        </article>
+      </section>
+
+      <section class="section full-width">
+        <div class="section-head">
+          <div>
+            <h2 class="section-title">Dimension Breakdown</h2>
+            <p class="section-subtitle">Latest 30-day comparison by productivity dimension</p>
+          </div>
+        </div>
+        <div class="metric-row-scroll" id="dimension-cards"></div>
+      </section>
+
+      <section class="section">
+        <article class="card">
+          <div class="section-head">
+            <div>
+              <h2 class="section-title">Acceptance Rate by Language</h2>
+              <p class="section-subtitle">Latest 7-day averages by language and model version</p>
+            </div>
+          </div>
+          <div id="heatmap"></div>
+        </article>
+      </section>
+
+      <section class="section">
+        <article class="card bar-card">
+          <div class="section-head">
+            <div>
+              <h2 class="section-title">Task Completion Rate by Task Type</h2>
+              <p class="section-subtitle">Grouped comparison across common developer workflows</p>
+            </div>
+            <div class="legend">
+              <span class="legend-item"><span class="legend-swatch" style="background: var(--blue);"></span>Codex v1</span>
+              <span class="legend-item"><span class="legend-swatch" style="background: var(--teal);"></span>Codex v2</span>
+            </div>
+          </div>
+          <div id="task-bars"></div>
+        </article>
+      </section>
+
+      <section class="section full-width">
+        <article class="card">
+          <div class="section-head">
+            <div>
+              <h2 class="section-title">✦ Key Insights</h2>
+              <p class="section-subtitle">Auto-generated commentary from the synthetic dataset</p>
+            </div>
+          </div>
+          <div class="insights" id="insights"></div>
+        </article>
+      </section>
+
+      <section class="section footer-section full-width">
+        <footer class="card">
+          <div class="footer-note">Methodology: Weighted composite index across 5 developer productivity dimensions. Synthetic data generated for demo purposes.</div>
+          <div class="cta-buttons">
+            <a class="print-button" href="mailto:cctail435@gmail.com">📧 Email Ning</a>
+            <a class="print-button" href="https://www.linkedin.com/in/ning-ai-62249a109/" target="_blank" rel="noreferrer">🔗 LinkedIn</a>
+          </div>
+        </footer>
+      </section>
+    </main>
+  </div>
+
+  <div class="tooltip" id="tooltip"></div>
+
+  <script>
+    const DAY_COUNT = 90;
+    const V2_LAUNCH_DAY = 31;
+    const DEFAULT_WEIGHTS = {
+      acceptance: 30,
+      editTrust: 20,
+      testPass: 25,
+      completion: 20,
+      speed: 5
+    };
+    const WEIGHT_COLORS = {
+      acceptance: "#3b82f6",
+      editTrust: "#8b5cf6",
+      testPass: "#06b6d4",
+      completion: "#10b981",
+      speed: "#f59e0b"
+    };
+    const METRIC_CONFIG = [
+      { key: "acceptance", label: "Acceptance", icon: "✅" },
+      { key: "editTrust", label: "Edit Trust", icon: "✏️" },
+      { key: "testPass", label: "Test Pass", icon: "🧪" },
+      { key: "completion", label: "Completion", icon: "🏁" },
+      { key: "speed", label: "Speed", icon: "⚡" }
+    ];
+    const LANGUAGE_ICONS = {
+      Python: "🐍",
+      TypeScript: "📘",
+      Go: "⚙️",
+      Rust: "🦀",
+      SQL: "🗃️",
+      Java: "☕"
+    };
+
+    function createLCG(seed) {
+      let state = seed >>> 0;
+      return function rand() {
+        state = (1664525 * state + 1013904223) >>> 0;
+        return state / 4294967296;
+      };
+    }
+
+    const rand = createLCG(42);
+
+    function random() {
+      return rand();
+    }
+
+    function randomBetween(min, max) {
+      return min + (max - min) * random();
+    }
+
+    function randomNormal(mean, std) {
+      let u = 0;
+      let v = 0;
+      while (u === 0) u = random();
+      while (v === 0) v = random();
+      const z = Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+      return mean + z * std;
+    }
+
+    function clamp(value, min, max) {
+      return Math.min(max, Math.max(min, value));
+    }
+
+    function round(value, digits = 1) {
+      const factor = 10 ** digits;
+      return Math.round(value * factor) / factor;
+    }
+
+    function formatPct(value, digits = 1) {
+      return `${round(value * 100, digits)}%`;
+    }
+
+    function formatScore(value) {
+      return round(value, 1).toFixed(1);
+    }
+
+    function lerp(a, b, t) {
+      return a + (b - a) * t;
+    }
+
+    function mixHex(a, b, t) {
+      const pa = parseInt(a.slice(1), 16);
+      const pb = parseInt(b.slice(1), 16);
+      const ar = (pa >> 16) & 255;
+      const ag = (pa >> 8) & 255;
+      const ab = pa & 255;
+      const br = (pb >> 16) & 255;
+      const bg = (pb >> 8) & 255;
+      const bb = pb & 255;
+      const rr = Math.round(lerp(ar, br, t));
+      const rg = Math.round(lerp(ag, bg, t));
+      const rb = Math.round(lerp(ab, bb, t));
+      return `rgb(${rr}, ${rg}, ${rb})`;
+    }
+
+    function acceptanceColor(value) {
+      const clamped = clamp(value, 0, 1);
+      if (clamped <= 0.5) {
+        return mixHex("#f43f5e", "#f59e0b", clamped / 0.5);
+      }
+      return mixHex("#f59e0b", "#10b981", (clamped - 0.5) / 0.5);
+    }
+
+    function normalizeLatency(latencyMs) {
+      return clamp((latencyMs - 800) / 600, 0, 1);
+    }
+
+    function scoreFromMetrics(metrics, weights) {
+      const normalized = {
+        acceptance: metrics.suggestion_acceptance_rate,
+        editTrust: 1 - metrics.edit_distance_ratio,
+        testPass: metrics.test_pass_rate,
+        completion: metrics.task_completion_rate,
+        speed: 1 - normalizeLatency(metrics.median_latency_ms)
+      };
+      const score =
+        normalized.acceptance * weights.acceptance +
+        normalized.editTrust * weights.editTrust +
+        normalized.testPass * weights.testPass +
+        normalized.completion * weights.completion +
+        normalized.speed * weights.speed;
+      return score;
+    }
+
+    function createDateLabel(dayIndex) {
+      const today = new Date("2026-03-19T12:00:00");
+      const date = new Date(today);
+      date.setDate(today.getDate() - (DAY_COUNT - 1 - dayIndex));
+      return date.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+    }
+
+    function generateDailyDataset() {
+      const rows = [];
+      for (let day = 1; day <= DAY_COUNT; day += 1) {
+        const weeklyWave = Math.sin((day / 7) * Math.PI * 2) * 0.008;
+        const longerWave = Math.cos(day / 18) * 0.006;
+
+        const v1NoveltyPenalty = day <= 14 ? (day - 1) / 13 * 0.032 : 0.032;
+        const v1Acceptance = clamp(randomNormal(0.52 - v1NoveltyPenalty + weeklyWave, 0.04), 0.39, 0.67);
+        const v1Edit = clamp(randomNormal(0.38 + v1NoveltyPenalty * 0.2 - weeklyWave * 0.4, 0.035), 0.23, 0.53);
+        const v1Test = clamp(randomNormal(0.71 - v1NoveltyPenalty * 0.22 + weeklyWave * 0.7, 0.04), 0.58, 0.84);
+        const v1Completion = clamp(randomNormal(0.68 - v1NoveltyPenalty * 0.18 + longerWave, 0.045), 0.54, 0.82);
+        const v1Latency = Math.round(clamp(randomNormal(1100 + v1NoveltyPenalty * 850 + weeklyWave * 2000, 90), 860, 1380));
+        const v1Depth = clamp(randomNormal(3.8 - v1NoveltyPenalty * 1.4 + longerWave * 7, 0.45), 2.4, 5.4);
+
+        rows.push({
+          day,
+          dateLabel: createDateLabel(day - 1),
+          model: "Codex v1",
+          suggestion_acceptance_rate: v1Acceptance,
+          edit_distance_ratio: v1Edit,
+          test_pass_rate: v1Test,
+          task_completion_rate: v1Completion,
+          median_latency_ms: v1Latency,
+          session_depth: v1Depth
+        });
+
+        if (day >= V2_LAUNCH_DAY) {
+          const maturity = (day - V2_LAUNCH_DAY) / (DAY_COUNT - V2_LAUNCH_DAY + 1);
+          const stabilityLift = Math.sin(day / 10) * 0.005 + maturity * 0.006;
+          const v2Acceptance = clamp(randomNormal(0.61 + stabilityLift, 0.03), 0.52, 0.72);
+          const v2Edit = clamp(randomNormal(0.29 - stabilityLift * 0.12, 0.025), 0.18, 0.4);
+          const v2Test = clamp(randomNormal(0.79 + stabilityLift * 0.55, 0.03), 0.68, 0.9);
+          const v2Completion = clamp(randomNormal(0.76 + stabilityLift * 0.45, 0.033), 0.63, 0.88);
+          const v2Latency = Math.round(clamp(randomNormal(890 - stabilityLift * 700, 70), 800, 1080));
+          const v2Depth = clamp(randomNormal(4.6 + stabilityLift * 5, 0.5), 3.2, 6.8);
+
+          rows.push({
+            day,
+            dateLabel: createDateLabel(day - 1),
+            model: "Codex v2",
+            suggestion_acceptance_rate: v2Acceptance,
+            edit_distance_ratio: v2Edit,
+            test_pass_rate: v2Test,
+            task_completion_rate: v2Completion,
+            median_latency_ms: v2Latency,
+            session_depth: v2Depth
+          });
+        }
+      }
+      return rows;
+    }
+
+    function generateLanguageDataset(dailyRows) {
+      const languages = ["Python", "TypeScript", "Go", "Rust", "SQL", "Java"];
+      const biases = {
+        Python: { acceptance: 0.04, test: 0.035, completion: 0.03 },
+        TypeScript: { acceptance: 0.035, test: 0.025, completion: 0.028 },
+        Go: { acceptance: -0.03, test: -0.025, completion: -0.02 },
+        Rust: { acceptance: -0.04, test: -0.03, completion: -0.024 },
+        SQL: { acceptance: 0.01, test: 0.008, completion: 0.012 },
+        Java: { acceptance: -0.008, test: -0.005, completion: -0.004 }
+      };
+      const data = [];
+
+      ["Codex v1", "Codex v2"].forEach((model) => {
+        const recent = dailyRows.filter((row) => row.model === model && row.day > DAY_COUNT - 7);
+        const avg = averageMetrics(recent);
+
+        languages.forEach((language) => {
+          const bias = biases[language];
+          const v2Boost = model === "Codex v2" && (language === "Go" || language === "Rust") ? 0.018 : 0;
+          data.push({
+            language,
+            model,
+            acceptance_rate: clamp(randomNormal(avg.suggestion_acceptance_rate + bias.acceptance + v2Boost, 0.015), 0.42, 0.82),
+            test_pass_rate: clamp(randomNormal(avg.test_pass_rate + bias.test + v2Boost * 0.8, 0.016), 0.5, 0.9),
+            task_completion_rate: clamp(randomNormal(avg.task_completion_rate + bias.completion + v2Boost * 0.7, 0.018), 0.48, 0.9)
+          });
+        });
+      });
+
+      return data;
+    }
+
+    function generateTaskDataset(dailyRows) {
+      const taskTypes = ["Autocomplete", "Refactor", "Test Generation", "Bug Fix", "Documentation"];
+      const modifiers = {
+        Autocomplete: { acceptance: 0.04, completion: 0.02 },
+        Refactor: { acceptance: -0.045, completion: -0.05 },
+        "Test Generation": { acceptance: -0.05, completion: -0.055 },
+        "Bug Fix": { acceptance: 0.01, completion: 0.015 },
+        Documentation: { acceptance: 0.018, completion: 0.012 }
+      };
+      const data = [];
+
+      ["Codex v1", "Codex v2"].forEach((model) => {
+        const recent = dailyRows.filter((row) => row.model === model && row.day > DAY_COUNT - 21);
+        const avg = averageMetrics(recent);
+
+        taskTypes.forEach((taskType) => {
+          const mod = modifiers[taskType];
+          const lift = model === "Codex v2" && (taskType === "Refactor" || taskType === "Test Generation") ? 0.045 : 0;
+          data.push({
+            taskType,
+            model,
+            acceptance_rate: clamp(randomNormal(avg.suggestion_acceptance_rate + mod.acceptance + lift, 0.018), 0.38, 0.84),
+            task_completion_rate: clamp(randomNormal(avg.task_completion_rate + mod.completion + lift * 0.9, 0.02), 0.42, 0.9)
+          });
+        });
+      });
+
+      return data;
+    }
+
+    const dailyMetrics = generateDailyDataset();
+    const languageBreakdown = generateLanguageDataset(dailyMetrics);
+    const taskBreakdown = generateTaskDataset(dailyMetrics);
+
+    const state = {
+      weights: { ...DEFAULT_WEIGHTS },
+      heatmapMetric: "acceptance_rate"
+    };
+
+    function getRowsForModel(model) {
+      return dailyMetrics.filter((row) => row.model === model);
+    }
+
+    function averageMetrics(rows) {
+      const sums = rows.reduce((acc, row) => {
+        acc.suggestion_acceptance_rate += row.suggestion_acceptance_rate;
+        acc.edit_distance_ratio += row.edit_distance_ratio;
+        acc.test_pass_rate += row.test_pass_rate;
+        acc.task_completion_rate += row.task_completion_rate;
+        acc.median_latency_ms += row.median_latency_ms;
+        acc.session_depth += row.session_depth;
+        return acc;
+      }, {
+        suggestion_acceptance_rate: 0,
+        edit_distance_ratio: 0,
+        test_pass_rate: 0,
+        task_completion_rate: 0,
+        median_latency_ms: 0,
+        session_depth: 0
+      });
+      const count = rows.length || 1;
+      return {
+        suggestion_acceptance_rate: sums.suggestion_acceptance_rate / count,
+        edit_distance_ratio: sums.edit_distance_ratio / count,
+        test_pass_rate: sums.test_pass_rate / count,
+        task_completion_rate: sums.task_completion_rate / count,
+        median_latency_ms: sums.median_latency_ms / count,
+        session_depth: sums.session_depth / count
+      };
+    }
+
+    function latestRows(model, length) {
+      const rows = getRowsForModel(model);
+      return rows.slice(-length);
+    }
+
+    function computeModelSummary(model, weights = state.weights) {
+      const recent = latestRows(model, 30);
+      const avg = averageMetrics(recent);
+      const score = scoreFromMetrics(avg, weights);
+      return {
+        model,
+        metrics: avg,
+        score
+      };
+    }
+
+    function computeDailyScores(model) {
+      return getRowsForModel(model).map((row) => ({
+        day: row.day,
+        dateLabel: row.dateLabel,
+        score: scoreFromMetrics(row, state.weights),
+        row
+      }));
+    }
+
+    function rollingWindowStats(series, windowSize = 7) {
+      return series.map((point, index) => {
+        const start = Math.max(0, index - windowSize + 1);
+        const window = series.slice(start, index + 1).map((item) => item.score);
+        return {
+          day: point.day,
+          low: clamp(Math.min(...window), 0, 100),
+          high: clamp(Math.max(...window), 0, 100)
+        };
+      });
+    }
+
+    function createHeroCard(summary, accentColor) {
+      const m = summary.metrics;
+      const speedScore = (1 - normalizeLatency(m.median_latency_ms)) * 100;
+      const methodology = `Score = Σ(weight × dimension_value) × 100
+Dimensions: Acceptance (${state.weights.acceptance}%), Edit Trust (${state.weights.editTrust}%), Test Pass (${state.weights.testPass}%), Completion (${state.weights.completion}%), Speed (${state.weights.speed}%)
+Current weights shown in the configuration panel below.`;
+      const pills = [
+        `✅ <span>Accept</span> <strong>${formatPct(m.suggestion_acceptance_rate)}</strong>`,
+        `✏️ <span>Trust</span> <strong>${formatPct(1 - m.edit_distance_ratio)}</strong>`,
+        `🧪 <span>Tests</span> <strong>${formatPct(m.test_pass_rate)}</strong>`,
+        `🏁 <span>Complete</span> <strong>${formatPct(m.task_completion_rate)}</strong>`,
+        `⚡ <span>Speed</span> <strong>${round(speedScore, 1)} / 100</strong>`
+      ];
+      return `
+        <div class="hero-model">
+          <div class="model-tag"><span class="model-dot ${summary.model === "Codex v1" ? "dot-v1" : "dot-v2"}"></span>${summary.model}</div>
+          <div class="hero-label">Latest 30-day average</div>
+        </div>
+        <div class="hero-score-row">
+          <div class="hero-score" style="color:${accentColor}">${formatScore(summary.score)}</div>
+          <button class="info-button" type="button" data-tooltip="${methodology.replace(/\n/g, "&#10;")}">(i)</button>
+        </div>
+        <div class="metric-pills">${pills.map((pill) => `<div class="pill">${pill}</div>`).join("")}</div>
+      `;
+    }
+
+    function renderHero() {
+      const v1 = computeModelSummary("Codex v1");
+      const v2 = computeModelSummary("Codex v2");
+      document.getElementById("hero-v1").innerHTML = createHeroCard(v1, "#93c5fd");
+      document.getElementById("hero-v2").innerHTML = createHeroCard(v2, "#67e8f9");
+
+      const delta = v2.score - v1.score;
+      const pct = (delta / v1.score) * 100;
+      const positive = delta >= 0;
+      const node = document.getElementById("hero-delta");
+      node.className = `delta-badge ${positive ? "" : "negative"}`.trim();
+      node.innerHTML = `
+        <div class="delta-arrow">${positive ? "↗" : "↘"}</div>
+        <div class="delta-text">${positive ? "+" : ""}${formatScore(delta)} pts · ${positive ? "+" : ""}${formatScore(pct)}%</div>
+        <div class="delta-sub">v2 relative to v1</div>
+      `;
+
+      document.querySelectorAll(".info-button").forEach((button) => {
+        button.addEventListener("mousemove", (event) => {
+          const lines = button.dataset.tooltip.split(/\n|&#10;/);
+          showTooltip(event.clientX, event.clientY, `
+            <div class="tooltip-title">Methodology</div>
+            ${lines.map((line) => `<div>${line}</div>`).join("")}
+          `);
+        });
+        button.addEventListener("mouseleave", hideTooltip);
+      });
+    }
+
+    function makeNormalizedStepWeights(rawWeights, changedKey, newValue) {
+      const target = clamp(Math.round(newValue / 5) * 5, 0, 100);
+      const otherKeys = Object.keys(rawWeights).filter((key) => key !== changedKey);
+      const othersTotal = otherKeys.reduce((sum, key) => sum + rawWeights[key], 0);
+      const remaining = 100 - target;
+      const provisional = {};
+
+      if (remaining === 0) {
+        otherKeys.forEach((key) => {
+          provisional[key] = 0;
+        });
+      } else if (othersTotal === 0) {
+        const base = Math.floor((remaining / otherKeys.length) / 5) * 5;
+        otherKeys.forEach((key) => {
+          provisional[key] = base;
+        });
+      } else {
+        otherKeys.forEach((key) => {
+          provisional[key] = rawWeights[key] / othersTotal * remaining;
+        });
+      }
+
+      const rounded = {};
+      const fractions = [];
+      let used = target;
+      otherKeys.forEach((key) => {
+        const stepped = Math.floor(provisional[key] / 5) * 5;
+        rounded[key] = clamp(stepped, 0, 100);
+        used += rounded[key];
+        fractions.push({ key, remainder: provisional[key] - stepped });
+      });
+
+      let diff = remaining - (used - target);
+      fractions.sort((a, b) => b.remainder - a.remainder);
+      let index = 0;
+      while (diff > 0 && fractions.length) {
+        const current = fractions[index % fractions.length].key;
+        rounded[current] += 5;
+        diff -= 5;
+        index += 1;
+      }
+
+      const result = { ...rounded, [changedKey]: target };
+      Object.keys(result).forEach((key) => {
+        result[key] = clamp(Math.round(result[key] / 5) * 5, 0, 100);
+      });
+
+      const currentTotal = Object.values(result).reduce((sum, value) => sum + value, 0);
+      if (currentTotal !== 100) {
+        const adjustKey = otherKeys[0] || changedKey;
+        result[adjustKey] = clamp(result[adjustKey] + (100 - currentTotal), 0, 100);
+      }
+      return result;
+    }
+
+    function renderWeightControls() {
+      const container = document.getElementById("weight-controls");
+      container.innerHTML = METRIC_CONFIG.map(({ key, label, icon }) => `
+        <div class="control-row">
+          <label class="control-label" for="weight-${key}">${icon} ${label}</label>
+          <input id="weight-${key}" type="range" min="0" max="100" step="5" value="${state.weights[key]}" data-key="${key}" />
+          <div class="control-value">${state.weights[key]}%</div>
+        </div>
+      `).join("");
+
+      container.querySelectorAll('input[type="range"]').forEach((input) => {
+        input.addEventListener("input", (event) => {
+          const key = event.target.dataset.key;
+          state.weights = makeNormalizedStepWeights(state.weights, key, Number(event.target.value));
+          renderAll();
+        });
+      });
+
+      const stack = document.getElementById("weight-distribution");
+      stack.innerHTML = METRIC_CONFIG.map(({ key }) => `
+        <span style="width:${state.weights[key]}%;background:${WEIGHT_COLORS[key]};"></span>
+      `).join("");
+    }
+
+    function linePath(points, xScale, yScale) {
+      return points.map((point, index) => {
+        const x = round(xScale(point.day), 2);
+        const y = round(yScale(point.score), 2);
+        return `${index === 0 ? "M" : "L"} ${x} ${y}`;
+      }).join(" ");
+    }
+
+    function areaPath(points, xScale, yScale) {
+      if (!points.length) return "";
+      const upper = points.map((point, index) => `${index === 0 ? "M" : "L"} ${round(xScale(point.day), 2)} ${round(yScale(point.high), 2)}`).join(" ");
+      const lower = points.slice().reverse().map((point) => `L ${round(xScale(point.day), 2)} ${round(yScale(point.low), 2)}`).join(" ");
+      return `${upper} ${lower} Z`;
+    }
+
+    function renderTimeSeries() {
+      const container = document.getElementById("time-series-chart");
+      const width = container.clientWidth || 960;
+      const height = 340;
+      const margin = { top: 20, right: 18, bottom: 36, left: 48 };
+      const innerWidth = width - margin.left - margin.right;
+      const innerHeight = height - margin.top - margin.bottom;
+
+      const v1Scores = computeDailyScores("Codex v1");
+      const v2Scores = computeDailyScores("Codex v2");
+      const v1Stats = rollingWindowStats(v1Scores);
+      const v2Stats = rollingWindowStats(v2Scores);
+
+      const xScale = (day) => margin.left + ((day - 1) / (DAY_COUNT - 1)) * innerWidth;
+      const yScale = (score) => margin.top + innerHeight - (score / 100) * innerHeight;
+      const ticks = Array.from({ length: 11 }, (_, i) => i * 10);
+      const yTicks = [0, 20, 40, 60, 80, 100];
+      const launchX = xScale(V2_LAUNCH_DAY);
+
+      const overlayPoints = Array.from({ length: DAY_COUNT }, (_, i) => {
+        const day = i + 1;
+        const v1 = v1Scores.find((point) => point.day === day);
+        const v2 = v2Scores.find((point) => point.day === day);
+        return { day, v1, v2 };
+      });
+
+      container.innerHTML = `
+        <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Productivity score over time">
+          ${yTicks.map((tick) => `
+            <line x1="${margin.left}" y1="${yScale(tick)}" x2="${width - margin.right}" y2="${yScale(tick)}" stroke="rgba(100,116,139,0.18)" stroke-width="1" />
+            <text x="${margin.left - 10}" y="${yScale(tick) + 4}" text-anchor="end" class="svg-label">${tick}</text>
+          `).join("")}
+          ${ticks.filter((tick) => tick > 0).map((tick) => `
+            <line x1="${xScale(tick)}" y1="${margin.top}" x2="${xScale(tick)}" y2="${height - margin.bottom}" stroke="rgba(100,116,139,0.12)" stroke-width="1" />
+            <text x="${xScale(tick)}" y="${height - 12}" text-anchor="middle" class="svg-label">D${tick}</text>
+          `).join("")}
+          <path d="${areaPath(v1Stats, xScale, yScale)}" fill="rgba(59,130,246,0.10)" stroke="none"></path>
+          <path d="${areaPath(v2Stats, xScale, yScale)}" fill="rgba(6,182,212,0.1)" stroke="none"></path>
+          <path d="${linePath(v1Scores, xScale, yScale)}" fill="none" stroke="#3b82f6" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"></path>
+          <path d="${linePath(v2Scores, xScale, yScale)}" fill="none" stroke="#06b6d4" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"></path>
+          <line x1="${launchX}" y1="${margin.top}" x2="${launchX}" y2="${height - margin.bottom}" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="5,4"></line>
+          <text x="${launchX + 8}" y="${margin.top + 12}" class="svg-label" fill="#f59e0b" font-size="10">v2 Launch</text>
+          ${overlayPoints.map((point) => `
+            <rect class="hover-target" data-day="${point.day}" x="${xScale(point.day) - innerWidth / DAY_COUNT / 2}" y="${margin.top}" width="${innerWidth / DAY_COUNT}" height="${innerHeight}" fill="transparent"></rect>
+          `).join("")}
+        </svg>
+      `;
+
+      container.querySelectorAll(".hover-target").forEach((target) => {
+        target.addEventListener("mousemove", (event) => {
+          const day = Number(target.dataset.day);
+          const point = overlayPoints[day - 1];
+          const rows = [
+            `<div class="tooltip-title">Day ${day} · ${point.v1 ? point.v1.dateLabel : ""}</div>`,
+            `<div class="tooltip-row"><span>Codex v1</span><span>${point.v1 ? formatScore(point.v1.score) : "n/a"}</span></div>`,
+            `<div class="tooltip-row"><span>Codex v2</span><span>${point.v2 ? formatScore(point.v2.score) : "n/a"}</span></div>`
+          ];
+          if (point.v2) {
+            const delta = point.v2.score - point.v1.score;
+            rows.push(`<div class="tooltip-row"><span>Delta</span><span>${delta >= 0 ? "+" : ""}${formatScore(delta)}</span></div>`);
+          }
+          showTooltip(event.clientX, event.clientY, rows.join(""));
+        });
+        target.addEventListener("mouseleave", hideTooltip);
+      });
+    }
+
+    function sparklinePath(values, width, height, padding) {
+      const min = Math.min(...values);
+      const max = Math.max(...values);
+      const range = max - min || 1;
+      return values.map((value, index) => {
+        const x = padding + (index / (values.length - 1 || 1)) * (width - padding * 2);
+        const y = height - padding - ((value - min) / range) * (height - padding * 2);
+        return `${index === 0 ? "M" : "L"} ${round(x, 2)} ${round(y, 2)}`;
+      }).join(" ");
+    }
+
+    function metricValue(row, key) {
+      if (key === "acceptance") return row.suggestion_acceptance_rate;
+      if (key === "editTrust") return 1 - row.edit_distance_ratio;
+      if (key === "testPass") return row.test_pass_rate;
+      if (key === "completion") return row.task_completion_rate;
+      return 1 - normalizeLatency(row.median_latency_ms);
+    }
+
+    function renderDimensionCards() {
+      const container = document.getElementById("dimension-cards");
+      const v1Recent = latestRows("Codex v1", 30);
+      const v2Recent = latestRows("Codex v2", 30);
+      container.innerHTML = METRIC_CONFIG.map(({ key, label }) => {
+        const v1Values = v1Recent.map((row) => metricValue(row, key) * 100);
+        const v2Values = v2Recent.map((row) => metricValue(row, key) * 100);
+        const v1Current = v1Values.reduce((sum, value) => sum + value, 0) / v1Values.length;
+        const v2Current = v2Values.reduce((sum, value) => sum + value, 0) / v2Values.length;
+        const delta = v2Current - v1Current;
+        const width = 190;
+        const height = 60;
+        return `
+          <article class="card mini-card">
+            <div class="mini-head">
+              <div>
+                <h3 class="mini-title">${label}</h3>
+                <div class="hero-label">30-day trend</div>
+              </div>
+              <div class="mini-values">
+                <div>v1 ${round(v1Current, 1)}%</div>
+                <div>v2 ${round(v2Current, 1)}%</div>
+              </div>
+            </div>
+            <svg viewBox="0 0 ${width} ${height}" aria-hidden="true">
+              <path d="${sparklinePath(v1Values, width, height, 7)}" fill="none" stroke="#3b82f6" stroke-width="2.2"></path>
+              <path d="${sparklinePath(v2Values, width, height, 7)}" fill="none" stroke="#06b6d4" stroke-width="2.2"></path>
+            </svg>
+            <div class="delta-chip ${delta >= 0 ? "positive" : "negative"}">${delta >= 0 ? "+" : ""}${round(delta, 1)}pp</div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function renderHeatmap() {
+      const container = document.getElementById("heatmap");
+      const metricMeta = {
+        acceptance_rate: { label: "Acceptance Rate", insightLabel: "acceptance rate" },
+        test_pass_rate: { label: "Test Pass Rate", insightLabel: "test pass rate" },
+        task_completion_rate: { label: "Task Completion", insightLabel: "task completion rate" }
+      };
+      const activeMetric = state.heatmapMetric;
+      const languages = ["Python", "TypeScript", "Go", "Rust", "SQL", "Java"];
+      const cells = languages.map((language) => {
+        const v1 = languageBreakdown.find((item) => item.language === language && item.model === "Codex v1");
+        const v2 = languageBreakdown.find((item) => item.language === language && item.model === "Codex v2");
+        return `
+          <tr>
+            <td class="row-head">${LANGUAGE_ICONS[language]} ${language}</td>
+            ${[v1, v2].map((item) => `
+              <td class="data-cell" data-language="${item.language}" data-model="${item.model}" data-rate="${item[activeMetric]}" data-metric="${metricMeta[activeMetric].label}" style="background:${acceptanceColor(item[activeMetric])};color:${item[activeMetric] > 0.62 ? "#04211a" : "#fff7ed"};">
+                ${formatPct(item[activeMetric])}
+              </td>
+            `).join("")}
+          </tr>
+        `;
+      }).join("");
+
+      const improvement = languages.map((language) => {
+        const v1 = languageBreakdown.find((item) => item.language === language && item.model === "Codex v1")[activeMetric];
+        const v2 = languageBreakdown.find((item) => item.language === language && item.model === "Codex v2")[activeMetric];
+        return { language, delta: v2 - v1 };
+      }).sort((a, b) => b.delta - a.delta)[0];
+
+      container.innerHTML = `
+        <div class="tab-switcher">
+          ${Object.entries(metricMeta).map(([key, meta]) => `<button class="tab-button ${key === activeMetric ? "active" : ""}" type="button" data-metric="${key}">${meta.label}</button>`).join("")}
+        </div>
+        <table class="heatmap-table">
+          <thead>
+            <tr>
+              <th>Language</th>
+              <th>Codex v1</th>
+              <th>Codex v2</th>
+            </tr>
+          </thead>
+          <tbody>${cells}</tbody>
+        </table>
+        <div class="heatmap-insight">${improvement.language} shows the largest v1→v2 improvement in ${metricMeta[activeMetric].insightLabel} (+${round(improvement.delta * 100, 1)}pp), suggesting stronger gains in that workflow cluster.</div>
+      `;
+
+      container.querySelectorAll(".tab-button").forEach((button) => {
+        button.addEventListener("click", () => {
+          state.heatmapMetric = button.dataset.metric;
+          renderHeatmap();
+        });
+      });
+
+      container.querySelectorAll(".data-cell").forEach((cell) => {
+        cell.addEventListener("mousemove", (event) => {
+          showTooltip(event.clientX, event.clientY, `
+            <div class="tooltip-title">${cell.dataset.language} · ${cell.dataset.model}</div>
+            <div class="tooltip-row"><span>${cell.dataset.metric}</span><span>${formatPct(Number(cell.dataset.rate))}</span></div>
+          `);
+        });
+        cell.addEventListener("mouseleave", hideTooltip);
+      });
+    }
+
+    function renderTaskBars() {
+      const container = document.getElementById("task-bars");
+      const tasks = ["Autocomplete", "Refactor", "Test Generation", "Bug Fix", "Documentation"];
+      const width = 640;
+      const height = 300;
+      const margin = { top: 12, right: 40, bottom: 16, left: 138 };
+      const innerWidth = width - margin.left - margin.right;
+      const rowGap = 44;
+      const barHeight = 12;
+      const yForTask = (index) => margin.top + index * rowGap;
+      const scaleX = (value) => margin.left + value * innerWidth;
+
+      container.innerHTML = `
+        <svg viewBox="0 0 640 300" width="100%" height="auto" role="img" aria-label="Task completion rate by task type">
+          ${[0, 0.25, 0.5, 0.75, 1].map((tick) => `
+            <line x1="${scaleX(tick)}" y1="${margin.top - 4}" x2="${scaleX(tick)}" y2="${height - 22}" stroke="rgba(100,116,139,0.14)" stroke-width="1"></line>
+            <text x="${scaleX(tick)}" y="${height - 6}" text-anchor="middle" class="svg-label">${Math.round(tick * 100)}%</text>
+          `).join("")}
+          ${tasks.map((task, index) => {
+            const v1 = taskBreakdown.find((item) => item.taskType === task && item.model === "Codex v1");
+            const v2 = taskBreakdown.find((item) => item.taskType === task && item.model === "Codex v2");
+            const baseY = yForTask(index);
+            return `
+              <text x="${margin.left - 12}" y="${baseY + 13}" text-anchor="end" class="svg-value">${task}</text>
+              <rect x="${margin.left}" y="${baseY}" width="${scaleX(v1.task_completion_rate) - margin.left}" height="${barHeight}" rx="6" fill="#3b82f6"></rect>
+              <rect x="${margin.left}" y="${baseY + 16}" width="${scaleX(v2.task_completion_rate) - margin.left}" height="${barHeight}" rx="6" fill="#06b6d4"></rect>
+              <text x="${scaleX(v1.task_completion_rate) + 8}" y="${baseY + 10}" class="svg-label">${Math.round(v1.task_completion_rate * 100)}%</text>
+              <text x="${scaleX(v2.task_completion_rate) + 8}" y="${baseY + 26}" class="svg-label">${Math.round(v2.task_completion_rate * 100)}%</text>
+            `;
+          }).join("")}
+        </svg>
+      `;
+    }
+
+    function strongestDimensionSummary() {
+      const v1 = computeModelSummary("Codex v1").metrics;
+      const v2 = computeModelSummary("Codex v2").metrics;
+      const dimensions = [
+        { label: "acceptance rate", delta: (v2.suggestion_acceptance_rate - v1.suggestion_acceptance_rate) * 100 },
+        { label: "edit trust", delta: ((1 - v2.edit_distance_ratio) - (1 - v1.edit_distance_ratio)) * 100 },
+        { label: "test pass rate", delta: (v2.test_pass_rate - v1.test_pass_rate) * 100 },
+        { label: "task completion", delta: (v2.task_completion_rate - v1.task_completion_rate) * 100 },
+        { label: "speed", delta: ((1 - normalizeLatency(v2.median_latency_ms)) - (1 - normalizeLatency(v1.median_latency_ms))) * 100 }
+      ];
+      return dimensions.sort((a, b) => b.delta - a.delta)[0];
+    }
+
+    function weakestLanguageSummary() {
+      const lowest = languageBreakdown.slice().sort((a, b) => a.acceptance_rate - b.acceptance_rate)[0];
+      return {
+        language: lowest.language,
+        rate: lowest.acceptance_rate
+      };
+    }
+
+    function noveltySummary() {
+      const v1 = getRowsForModel("Codex v1");
+      const early = averageMetrics(v1.slice(0, 3)).suggestion_acceptance_rate;
+      const late = averageMetrics(v1.slice(11, 14)).suggestion_acceptance_rate;
+      const stable = averageMetrics(v1.slice(14, 30)).suggestion_acceptance_rate;
+      return {
+        decay: (late - early) * 100,
+        stable: stable * 100
+      };
+    }
+
+    function recommendationSummary() {
+      const weakestLanguage = weakestLanguageSummary();
+      const lowestTask = taskBreakdown.slice().sort((a, b) => a.task_completion_rate - b.task_completion_rate)[0];
+      const meanAcceptance = languageBreakdown.reduce((sum, item) => sum + item.acceptance_rate, 0) / languageBreakdown.length;
+      return {
+        language: weakestLanguage.language,
+        taskType: lowestTask.taskType,
+        gap: (meanAcceptance - weakestLanguage.rate) * 100
+      };
+    }
+
+    function renderInsights() {
+      const container = document.getElementById("insights");
+      const v1Default = computeModelSummary("Codex v1", DEFAULT_WEIGHTS);
+      const v2Default = computeModelSummary("Codex v2", DEFAULT_WEIGHTS);
+      const delta = v2Default.score - v1Default.score;
+      const pct = delta / v1Default.score * 100;
+      const strongest = strongestDimensionSummary();
+      const weakest = weakestLanguageSummary();
+      const novelty = noveltySummary();
+      const recommendation = recommendationSummary();
+      const list = [
+        { text: `Codex v2 improves overall Productivity Score by +${formatScore(delta)} pts (+${formatScore(pct)}%) vs v1 on the default weight configuration.`, className: "" },
+        { text: `The largest gain is in ${strongest.label}, up +${round(strongest.delta, 1)}pp from v1 to v2.`, className: "" },
+        { text: `${weakest.language} shows the lowest acceptance rate across both models at ${formatPct(weakest.rate)}, flagging a potential fine-tuning opportunity.`, className: "" },
+        { text: `Codex v1 shows a novelty-effect decay of ${novelty.decay >= 0 ? "+" : ""}${round(novelty.decay, 1)}pp in acceptance rate over the first 14 days, stabilizing at ~${round(novelty.stable, 1)}% thereafter.`, className: "" },
+        { text: `Recommendation: ${recommendation.language} and ${recommendation.taskType} represent the highest-ROI fine-tuning targets — a focused dataset investment here could close an estimated ${round(recommendation.gap, 1)}pp gap with the model average.`, className: "recommendation" }
+      ];
+      container.innerHTML = list.map((item, index) => `<div class="insight ${item.className}"><strong>${index + 1}.</strong>${item.text}</div>`).join("");
+    }
+
+    function showTooltip(x, y, html) {
+      const tooltip = document.getElementById("tooltip");
+      tooltip.innerHTML = html;
+      tooltip.style.left = `${x}px`;
+      tooltip.style.top = `${y}px`;
+      tooltip.classList.add("visible");
+    }
+
+    function hideTooltip() {
+      document.getElementById("tooltip").classList.remove("visible");
+    }
+
+    function renderAll() {
+      renderHero();
+      renderWeightControls();
+      renderTimeSeries();
+      renderDimensionCards();
+      renderHeatmap();
+      requestAnimationFrame(() => {
+        renderTaskBars();
+      });
+      renderInsights();
+    }
+
+    document.getElementById("reset-button").addEventListener("click", () => {
+      state.weights = { ...DEFAULT_WEIGHTS };
+      renderAll();
+    });
+
+    document.getElementById("print-button").addEventListener("click", () => {
+      window.print();
+    });
+
+    window.addEventListener("resize", () => {
+      renderTimeSeries();
+      requestAnimationFrame(() => {
+        renderTaskBars();
+      });
+    });
+
+    renderAll();
+  </script>
+</body>
+</html>
